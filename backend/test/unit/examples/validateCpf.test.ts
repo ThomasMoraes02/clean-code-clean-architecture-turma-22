@@ -1,6 +1,6 @@
-import { validateCpf } from "../../src/examples/validateCpf";
-
 // npx jest test/examples/validateCpf.test.ts --coverage
+
+import { validateCpf } from "../../../src/domain/examples/validateCpf";
 
 describe("validateCpf", () => {
     test.each([

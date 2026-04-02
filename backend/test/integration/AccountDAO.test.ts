@@ -1,7 +1,12 @@
-import { AccountDAODatabase } from "../src/AccountDAO";
-import { getAccountById, saveAccount } from "../src/data";
+
+import Registry from "../../src/infra/di/Registry";
+import PgPromiseAdapter from "../../src/infra/database/DatabaseConnection";
+import { AccountDAODatabase } from "../../src/infra/dao/AccountDAO";
 
 test("Deve persistir uma conta", async () => {
+    const connection = new PgPromiseAdapter();
+    Registry.getInstance().provide("DatabaseConnection", connection);
+
     const accountDAO = new AccountDAODatabase();
     const accountId = crypto.randomUUID();
 
@@ -18,4 +23,6 @@ test("Deve persistir uma conta", async () => {
     expect(accountFromDb.email).toBe(account.email);
     expect(accountFromDb.document).toBe(account.document);
     expect(accountFromDb.password).toBe(account.password);
+
+    await connection.close();
 });

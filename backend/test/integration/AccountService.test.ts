@@ -1,14 +1,18 @@
-import { AccountDAODatabase, AccountDAOMemory } from "../src/AccountDAO";
-import AccountService from '../src/AccountService';
-import AccountDAO from '../src/AccountDAO';
+import AccountService from '../../src/application/service/AccountService';
 import sinon from "sinon";
-import Registry from "../src/Registry";
-import { AccountAssetDAODatabase } from "../src/AccountAssetDAO";
+import Registry from "../../src/infra/di/Registry";
+import PgPromiseAdapter from "../../src/infra/database/DatabaseConnection";
+import DatabaseConnection from "../../src/infra/database/DatabaseConnection";
+import AccountDAO, { AccountDAODatabase, AccountDAOMemory } from '../../src/infra/dao/AccountDAO';
+import { AccountAssetDAODatabase } from '../../src/infra/dao/AccountAssetDAO';
 
+let connection: DatabaseConnection;
 let acccountDao: AccountDAO;
 let accountService: AccountService;
 
 beforeEach(() => {
+    connection = new PgPromiseAdapter();
+    Registry.getInstance().provide("DatabaseConnection", connection);
     acccountDao = new AccountDAODatabase();
     Registry.getInstance().provide("accountDAO", acccountDao);
     const accountAssetDao = new AccountAssetDAODatabase();
@@ -255,3 +259,7 @@ test("Não deve sacar se não houver saldo suficiente", async () => {
     };
     await expect(() => accountService.withdraw(inputWithdraw)).rejects.toThrow(new Error("Insufficient funds"));
 });
+
+afterEach(async () => {
+    await connection.close();
+})

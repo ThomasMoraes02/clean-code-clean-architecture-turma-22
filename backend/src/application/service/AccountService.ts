@@ -1,23 +1,10 @@
-import { validateCpf } from './examples/validateCpf.base';
-import AccountDAO from './AccountDAO';
-import Registry, { inject } from './Registry';
-import AccountAssetDAO from './AccountAssetDAO';
-
-function validatePassword(password: string): boolean {
-    if (password.length < 8) return false;
-    if (!password.match(/[A-Z]/)) return false;
-    if (!password.match(/[a-z]/)) return false;
-    if (!password.match(/[0-9]/)) return false;
-    return true;
-}
-
-function validateName(name: string): boolean {
-    return name.match(/[a-zA-Z]+ [a-zA-Z]+/) !== null;
-}
-
-function validateEmail(email: string): boolean {
-    return email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) !== null;
-}
+import { validateCpf } from '../../domain/examples/validateCpf.base';
+import Registry, { inject } from '../../infra/di/Registry';
+import { validateName } from '../../domain/validateName';
+import { validateEmail } from '../../domain/validateEmail';
+import { validatePassword } from '../../domain/validatePassword';
+import AccountDAO from '../../infra/dao/AccountDAO';
+import AccountAssetDAO from '../../infra/dao/AccountAssetDAO';
 
 export default class AccountService {
     @inject("accountDAO")

@@ -42,7 +42,7 @@ export default class Registry {
  * @param name 
  * @returns 
  */
-export function inject(name: string) {
+export function injec2(name: string) {
     return function (target: any, propertyKey: string) {
         target[propertyKey] = new Proxy({}, {
             get(target: any, propertyKey: string) {
@@ -50,5 +50,25 @@ export function inject(name: string) {
                 return dependency[propertyKey];
             }
         })
+    }
+}
+
+/**
+ * Decorator para injetar dependências usando getter dinâmico.
+ * Permite acessar a dependência diretamente pela propriedade decorada.
+ *
+ * Exemplo de uso:
+ *   @inject2("DatabaseConnection")
+ *   connection!: DatabaseConnection;
+ */
+export function inject(name: string) {
+    return function (target: any, propertyKey: string) {
+        Object.defineProperty(target, propertyKey, {
+            get() {
+                return Registry.getInstance().inject(name);
+            },
+            enumerable: true,
+            configurable: true
+        });
     }
 }
