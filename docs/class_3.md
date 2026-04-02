@@ -38,3 +38,6 @@ O centro da sua aplicação são os UseCases, não os bancos de dados... Robert 
 
 (Frameworkds & Drivers): 
 - Devices, DB, UI, Web
+
+### Main
+*Ponto de Entrada da Aplicação:* (HTTP, CLI, UI, Tests) - onde tudo inicializa 
