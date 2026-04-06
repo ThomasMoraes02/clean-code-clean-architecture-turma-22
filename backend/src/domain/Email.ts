@@ -1,13 +1,13 @@
-export default class Name {
+export default class Email {
     private value: string;
 
     constructor (value: string) {
-        if (!this.isValid(value)) throw new Error("Invalid name");
+        if (!this.isValid(value)) throw new Error("Invalid email");
         this.value = value;
     }
 
     private isValid (value: string) {
-        return /[a-zA-Z]+ [a-zA-Z]+/.test(value);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     }
 
     getValue () {

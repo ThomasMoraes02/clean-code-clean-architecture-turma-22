@@ -1,4 +1,4 @@
-import { validateCpf } from '../../domain/examples/validateCpf.base';
+import { validateCpf } from '../../domain/refact/validateCpf.base';
 import Registry, { inject } from '../../infra/di/Registry';
 import { validateName } from '../../domain/validateName';
 import { validateEmail } from '../../domain/validateEmail';

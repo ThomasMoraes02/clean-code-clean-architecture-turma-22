@@ -34,7 +34,7 @@ export default class AccountRepositoryDatabase implements AccountRepository {
         const account = new Account(accountData.account_id, accountData.name, accountData.email, accountData.document, accountData.password);
         const accountAssetsData = await this.accountAssetDAO.getByAccountId(accountId);
         for (const accountAssetData of accountAssetsData) {
-            account.balances.push({ asset_id: accountAssetData.asset_id, quantity: parseFloat(accountAssetData.quantity) });
+            account.balances.push({ assetId: accountAssetData.asset_id, quantity: parseFloat(accountAssetData.quantity )});
         }
         return account;
     }
@@ -43,7 +43,7 @@ export default class AccountRepositoryDatabase implements AccountRepository {
         await this.accountDAO.update(account);
         await this.accountAssetDAO.deleteByAccountId(account.accountId);
         for (const balance of account.balances) {
-            await this.accountAssetDAO.save({ accountId: account.accountId, assetId: balance.asset_id, quantity: balance.quantity });
+            await this.accountAssetDAO.save({ accountId: account.accountId, assetId: balance.assetId, quantity: balance.quantity });
         }
     }
 }

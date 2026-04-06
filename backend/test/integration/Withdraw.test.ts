@@ -53,7 +53,7 @@ test("Deve sacar de uma conta", async () => {
     await withdraw.execute(inputWithdraw);
 
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
-    expect(outputGetAccount.balances[0]?.asset_id).toBe('USD');
+    expect(outputGetAccount.balances[0]?.assetId).toBe('USD');
     expect(outputGetAccount.balances[0]?.quantity).toBe(500);
 });
 

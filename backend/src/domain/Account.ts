@@ -1,47 +1,67 @@
-import { validateCpf } from "./examples/validateCpf";
+import Document from "./Document";
+import Email from "./Email";
 import Name from "./Name";
-import { validateEmail } from "./validateEmail";
-import { validatePassword } from "./validatePassword";
+import Order from "./Order";
+import Password from "./Password";
 
 export default class Account {
     balances: Balance[] = [];
-
     private name: Name;
+    private email: Email;
+    private document: Document;
+    private password: Password;
 
-    constructor(readonly accountId: string, name: string, readonly email: string, readonly document: string, readonly password: string) {
+    constructor (readonly accountId: string, name: string, email: string, document: string, password: string) {
         this.name = new Name(name);
-        if(!validateEmail(email)) throw new Error("Invalid email");
-        if(!validateCpf(document)) throw new Error("Invalid document");
-        if (!validatePassword(password)) throw new Error("Invalid password");
-    }   
+        this.email = new Email(email);
+        this.document = new Document(document);
+        this.password = new Password(password);
+    }
 
-    static create(name: string, email: string, document: string, password: string)
-    {
+    static create (name: string, email: string, document: string, password: string) {
         const accountId = crypto.randomUUID();
         return new Account(accountId, name, email, document, password);
     }
 
-    deposit(assetId: string, quantity: number): void {
-        const balance = this.balances.find(balance => balance.asset_id === assetId);
+    deposit (assetId: string, quantity: number) {
+        const balance = this.balances.find((balance: Balance) => balance.assetId === assetId);
         if (balance) {
             balance.quantity += quantity;
         } else {
-            this.balances.push({ asset_id: assetId, quantity });
+            this.balances.push({ assetId, quantity });
         }
     }
 
-    withdraw(assetId: string, quantity: number): void {
-        const balance = this.balances.find(balance => balance.asset_id === assetId);
-        if (!balance || balance.quantity < quantity) throw new Error("Insufficient funds");
+    withdraw (assetId: string, quantity: number) {
+        const balance = this.balances.find((balance: Balance) => balance.assetId === assetId);
+        if (!balance || balance.quantity < quantity) throw new Error("Insuficient funds");
         balance.quantity -= quantity;
+    }
+
+    getBalance (assetId: string) {
+        const balance = this.balances.find((balance: Balance) => balance.assetId === assetId);
+        if (!balance) return 0;
+        return balance;
     }
 
     getName(): string {
         return this.name.getValue();
     }
+
+    getEmail(): string {
+        return this.email.getValue();
+    }
+
+    getDocument(): string {
+        return this.document.getValue();
+    }
+
+    getPassword(): string {
+        return this.password.getValue();
+    }
 }
 
 type Balance = {
-    asset_id: string;
-    quantity: number;
-};
+    assetId: string,
+    quantity: number
+}

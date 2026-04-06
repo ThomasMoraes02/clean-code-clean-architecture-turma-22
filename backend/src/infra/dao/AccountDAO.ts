@@ -22,15 +22,16 @@ export class AccountDAODatabase implements AccountDAO {
     }
 
     async save(account: any): Promise<void> {
-        await this.connection.query("INSERT INTO ccca.account (account_id, name, email, document, password) VALUES ($1, $2, $3, $4, $5)", [account.accountId, account.getName(), account.email, account.document, account.password]);
+        await this.connection.query("INSERT INTO ccca.account (account_id, name, email, document, password) VALUES ($1, $2, $3, $4, $5)", [account.accountId, account.getName(), account.getEmail(), account.getDocument(), account.getPassword()]);
     }
 
     async update(account: any): Promise<void> {
-        await this.connection.query("UPDATE ccca.account SET name = $1, email = $2, document = $3, password = $4 WHERE account_id = $5", [account.getName(), account.email, account.document, account.password, account.accountId]);
+        await this.connection.query("UPDATE ccca.account SET name = $1, email = $2, document = $3, password = $4 WHERE account_id = $5", [account.getName(), account.getEmail(), account.getDocument(), account.getPassword(), account.accountId]);
     }
 
     async getById(accountId: string): Promise<any> {
         const [account] = await this.connection.query("SELECT * FROM ccca.account WHERE account_id = $1", [accountId]);
+        
         return account;
     }
 }

@@ -9,22 +9,24 @@ export default class GetAccount {
         this.accountRepository = Registry.getInstance().inject("accountRepository");
     }
 
-    async execute(accountId: string): Promise<Output> {
+    async execute (accountId: string): Promise<Output> {
         const account = await this.accountRepository.getById(accountId);
         return {
             accountId: account.accountId,
             name: account.getName(),
-            email: account.email,
-            document: account.document,
+            email: account.getEmail(),
+            document: account.getDocument(),
+            password: account.getPassword(),
             balances: account.balances
-        }
+        };
     }
 }
 
 type Output = {
-    accountId: string;
-    name: string;
-    email: string;
-    document: string;
-    balances: { asset_id: string; quantity: number }[];
+    accountId: string,
+    name: string,
+    email: string,
+    document: string,
+    password: string,
+    balances: { assetId: string, quantity: number }[]
 }
