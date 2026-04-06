@@ -36,29 +36,11 @@ export default class Registry {
 }
 
 /**
- * Decorator para injetar dependências. 
- * O nome da dependência deve ser o mesmo utilizado no método provide do Registry.
- * 
- * @param name 
- * @returns 
- */
-export function injec2(name: string) {
-    return function (target: any, propertyKey: string) {
-        target[propertyKey] = new Proxy({}, {
-            get(target: any, propertyKey: string) {
-                const dependency = Registry.getInstance().inject(name);
-                return dependency[propertyKey];
-            }
-        })
-    }
-}
-
-/**
  * Decorator para injetar dependências usando getter dinâmico.
  * Permite acessar a dependência diretamente pela propriedade decorada.
  *
  * Exemplo de uso:
- *   @inject2("DatabaseConnection")
+ *   @inject("DatabaseConnection")
  *   connection!: DatabaseConnection;
  */
 export function inject(name: string) {

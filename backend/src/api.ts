@@ -7,6 +7,8 @@ import { AccountDAODatabase } from './infra/dao/AccountDAO';
 import { AccountAssetDAODatabase } from './infra/dao/AccountAssetDAO';
 import Signup from './application/usecase/Signup';
 import GetAccount from './application/usecase/GetAccount';
+import ExecuteOrder from './application/usecase/ExecuteOrder';
+import MediatorMemory from './infra/mediator/Mediator';
 
 /**
  * Entrypoint da aplicação. Registra as dependências e inicia o servidor HTTP.
@@ -23,6 +25,13 @@ async function main() {
     Registry.getInstance().provide("httpServer", httpServer);
     Registry.getInstance().provide("signup", new Signup());
     Registry.getInstance().provide("getAccount", new GetAccount());
+    const mediator = new MediatorMemory();
+    Registry.getInstance().provide("mediator", mediator);
+    mediator.register("orderPlaced", async (event: any) => {
+        const executeOrder = new ExecuteOrder();
+        await executeOrder.execute(event.marketId);
+    });
+
     new AccountController();
 
     httpServer.listen(3000);
